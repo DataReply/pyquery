@@ -419,3 +419,23 @@ class JQueryTranslator(cssselect_xpath.HTMLTranslator):
         value = self.xpath_literal(function.arguments[0].value)
         xpath.add_post_condition("contains(text(), %s)" % value)
         return xpath
+        
+
+    def xpath_has_function(self, xpath, function):
+        """Matches all elements that contain the given text
+
+            >>> from pyquery import PyQuery
+            >>> d = PyQuery('<div><h1/><h1 class="title">title</h1></div>')
+            >>> d(':has("title")')
+            [<h1.title>]
+
+        ..
+        """
+        if function.argument_types() != ['STRING']:
+            raise ExpressionError(
+                "Expected a single string for :has(), got %r" % (
+                    function.arguments,))
+
+        value = self.xpath_literal(function.arguments[0].value)
+        xpath.add_post_condition("has(text(), %s)" % value)
+        return xpath
